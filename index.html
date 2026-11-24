@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101d33"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="DriverSmart AI"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png" type="image/png"><link rel="apple-touch-icon" href="icons/icon-192.png"><title>DriverSmart AI 8.1 — Driver Dashboard</title>
+<style>
+:root{--navy:#101d33;--navy2:#182b49;--blue:#2868d7;--blue2:#eaf1ff;--ink:#17243a;--muted:#718096;--bg:#f4f6fa;--line:#e4e9f1;--green:#16845b;--red:#b54747;--white:#fff;--shadow:0 8px 28px rgba(19,37,63,.06)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:1120px;margin:auto;padding:22px 24px 36px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:.02em;color:var(--navy);font-size:15px}
+.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#3279ed,#164da8);display:grid;place-items:center;color:#fff;font-size:18px;box-shadow:0 5px 14px #2868d733}
+.status{font-size:12px;font-weight:650;color:#4e647f;background:#edf2f8;border:1px solid #e0e7f0;border-radius:30px;padding:7px 11px}
+.hero{position:relative;overflow:hidden;border-radius:22px;padding:28px 30px;background:linear-gradient(115deg,#101d33 0%,#18365e 58%,#225eaa 100%);color:white;box-shadow:0 12px 30px #142b4a1c}
+.hero:after{content:"";position:absolute;width:260px;height:260px;border:1px solid #ffffff18;border-radius:50%;right:-75px;top:-130px;box-shadow:0 0 0 35px #ffffff08,0 0 0 70px #ffffff05}
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#b9cde8;font-weight:750}
+.hero h1{font-size:clamp(27px,4vw,37px);line-height:1.15;letter-spacing:-.035em;margin:9px 0 8px;max-width:600px}
+.hero p{margin:0;color:#d7e3f3;font-size:15px;max-width:590px}
+.hero-bottom{display:flex;align-items:center;gap:9px;margin-top:20px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #ffffff35;background:#ffffff12;border-radius:30px;padding:7px 11px;font-size:12px;color:#e6effb}
+.dot{width:7px;height:7px;border-radius:50%;background:#6fe0ad}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:25px 2px 12px}
+.section-head h2{font-size:18px;margin:0;letter-spacing:-.02em}.section-head p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.card,.metric{background:var(--white);border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow)}
+.metric{padding:17px 18px;min-height:112px;position:relative}
+.metric-label{display:flex;align-items:center;gap:8px;color:#64748b;font-size:12px;font-weight:650}
+.metric-icon{width:27px;height:27px;border-radius:9px;display:grid;place-items:center;background:#edf3ff;color:#2868d7;font-size:14px}
+.metric strong{display:block;font-size:26px;line-height:1.2;letter-spacing:-.035em;margin-top:12px;font-weight:780;font-variant-numeric:tabular-nums}
+.metric small{display:block;color:#94a0b1;font-size:11px;margin-top:4px}
+.main-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:15px;margin-top:16px;align-items:start}
+.card{padding:21px}
+.card-title{display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.step{width:30px;height:30px;border-radius:10px;background:var(--blue2);color:var(--blue);display:grid;place-items:center;font-weight:800;font-size:13px}
+.card-title h2{font-size:17px;margin:0;letter-spacing:-.02em}.card-title p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
+.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}
+label{font-size:12px;font-weight:700;color:#43536a}
+input,select{width:100%;min-height:46px;border:1px solid #d8e0ea;border-radius:11px;padding:10px 12px;font:inherit;font-size:14px;color:var(--ink);background:#fff;outline:none;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus{border-color:#6b9bea;box-shadow:0 0 0 3px #2868d71a}
+button{border:0;border-radius:11px;background:var(--blue);color:#fff;padding:12px 16px;font-weight:750;font-size:13px;cursor:pointer;transition:transform .12s,filter .12s}
+button:active{transform:translateY(1px)}button:hover{filter:brightness(.97)}
+#add{width:100%;margin-top:17px;min-height:47px;box-shadow:0 6px 14px #2868d72b}
+.hint{font-size:11px;color:#8190a3;margin:10px 0 0}
+.note{background:#f2f6fc;border:1px solid #e5edf8;padding:11px 12px;border-radius:11px;color:#5d6e84;font-size:11px;margin-top:14px}
+.performance-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.submetric{background:#f8faff;border:1px solid #e8eef7;border-radius:13px;padding:13px;margin-top:12px}
+.submetric small{display:block;color:#718096;font-size:11px;font-weight:650}.submetric strong{font-size:21px;display:block;margin-top:5px;font-variant-numeric:tabular-nums}
+.toolbar{display:flex;gap:9px;margin-top:16px}.toolbar button{flex:1;background:#edf3ff;color:#2457a6;border:1px solid #dce8ff}
+.history{margin-top:16px}.history-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}
+.history-head .card-title{margin:0}
+.tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:12px;min-width:690px}th,td{text-align:left;padding:12px 9px;border-bottom:1px solid #edf1f6;white-space:nowrap}th{color:#78879a;font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:750}td{color:#394a61}tbody tr:hover{background:#fafcff}
+.empty{text-align:center;color:#91a0b2;padding:25px}.positive{color:var(--green);font-weight:700}.negative{color:var(--red);font-weight:700}
+button.danger{background:#fff1f1;color:var(--red);padding:6px 9px;font-size:11px}
+.foot{font-size:11px;color:#8491a3;line-height:1.6;margin:17px 3px 0}
+@media(max-width:850px){.wrap{padding:16px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.main-grid{grid-template-columns:1fr}.hero{padding:25px}.metric{min-height:104px}}
+@media(max-width:480px){.wrap{padding:12px 12px 28px}.topbar{margin-bottom:13px}.status{font-size:10px;padding:6px 8px}.hero{border-radius:18px;padding:22px 20px}.hero h1{font-size:29px}.hero p{font-size:13px}.section-head{margin-top:20px}.metrics{gap:9px}.metric{padding:13px;min-height:98px;border-radius:14px}.metric strong{font-size:22px;margin-top:10px}.metric-label{font-size:11px}.metric-icon{width:24px;height:24px}.card{padding:16px;border-radius:15px}.fields{gap:12px 9px}.fields input,.fields select{min-height:44px;padding:9px;font-size:13px}.card-title h2{font-size:16px}.performance-fields{gap:9px}.submetric{padding:11px}.submetric strong{font-size:19px}.toolbar button{font-size:12px;padding:11px 8px}}
+@media print{body{background:#fff}.wrap{max-width:none;padding:0}.topbar,.hero,.toolbar,#add,.danger,.hint,.note{display:none!important}.card,.metric{box-shadow:none;break-inside:avoid}.main-grid{grid-template-columns:1fr 1fr}.foot{color:#555}}
+
+/* Version 5.1 — dark analytics dashboard skin */
+:root{--navy:#080f1e;--navy2:#111d32;--blue:#6557e8;--blue2:#222044;--ink:#edf2ff;--muted:#9aa9c2;--bg:#080d18;--line:#26344b;--green:#22c783;--red:#ff727b;--white:#111a2b;--shadow:0 12px 32px rgba(0,0,0,.22)}
+body{background:radial-gradient(ellipse at 85% 0%,#17274a 0%,#080d18 48%);color:var(--ink)}
+.wrap{max-width:1240px;padding:22px 26px 42px}
+.topbar{padding:10px 14px;background:#0e1728;border:1px solid #24324a;border-radius:16px;position:sticky;top:8px;z-index:5;box-shadow:0 8px 24px #0005}
+.brand{color:#f4f7ff}.logo{background:linear-gradient(145deg,#786cff,#4437bd);box-shadow:0 5px 18px #6557e855}
+.status{background:#17263b;color:#c1d0e8;border-color:#2b3b55}
+.hero{background:linear-gradient(115deg,#171b3c 0%,#202858 55%,#174d70 100%);border:1px solid #34436e;box-shadow:0 18px 45px #0004}
+.hero:after{border-color:#ffffff20;box-shadow:0 0 0 35px #ffffff09,0 0 0 70px #ffffff05}
+.hero .eyebrow{color:#aebdff}.hero p{color:#d0dcf4}.pill{background:#ffffff12;border-color:#ffffff2c;color:#e5eaff}
+.section-head h2,.card-title h2{color:#f1f5ff}.section-head p,.card-title p{color:#93a4bf}
+.metric,.card{background:linear-gradient(155deg,#121e31,#0f192a);border:1px solid #293850;box-shadow:var(--shadow);color:var(--ink)}
+.metric{min-height:122px}.metric-label{color:#a9b8d0}.metric-icon{background:#25234c;color:#a9a0ff}
+.metric strong{color:#f5f7ff}.metric small{color:#8fa0bb}
+.step{background:#28264f;color:#aaa2ff}
+label{color:#b8c6dc}
+input,select{background:#0b1423;color:#f0f4ff;border-color:#34445d}
+input::placeholder{color:#71829d}
+input:focus,select:focus{border-color:#887eff;box-shadow:0 0 0 3px #7568f22b}
+button{background:linear-gradient(135deg,#7568f5,#4f46cf);color:#fff;box-shadow:0 7px 18px #5146d633}
+#add{box-shadow:0 7px 18px #5146d633}
+.note{background:#18253a;border-color:#2b3d59;color:#b6c5dc}
+.submetric{background:#0c1728;border-color:#293a55}
+.submetric small{color:#94a7c3}.submetric strong{color:#f5f7ff}
+.toolbar button{background:#1c2b43;color:#c6d2ff;border-color:#344968}
+th{color:#8ea1bf}td{color:#d0d9e9;border-bottom-color:#25344b}
+tbody tr:hover{background:#1a2940}
+.empty{color:#8092ae}
+button.danger{background:#3a202b;color:#ff9aa2}
+.foot,.hint{color:#8496b2}
+.dot{background:#43dda1}
+@media(max-width:850px){.wrap{padding:13px 13px 30px}.topbar{top:4px}.hero{padding:23px}.metric{min-height:105px}}
+@media(max-width:480px){.wrap{padding:9px 10px 25px}.topbar{border-radius:13px;padding:8px 10px}.hero{border-radius:17px;padding:20px 18px}.hero h1{font-size:27px}.metric{border-radius:13px;min-height:100px}.card{border-radius:14px}.note{border-radius:10px}}
+
+/* Dashboard 6.0: structured analytics layout, mobile-first responsive */
+body{background:radial-gradient(ellipse at 80% 0%,#19284b 0%,#080d18 48%);color:#edf2ff}
+.wrap{max-width:1480px;padding:22px 26px 40px}
+.topbar{background:#0e1728;border:1px solid #24324a;border-radius:14px;padding:12px 16px;position:static;box-shadow:0 8px 24px #0003}
+.brand{color:#f4f7ff}.logo{background:linear-gradient(145deg,#8174ff,#4438bd);box-shadow:0 5px 18px #6557e855}
+.status{background:#17263b;color:#c1d0e8;border-color:#2b3b55}
+.welcome{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:24px 4px 18px}
+.welcome .eyebrow{color:#a79cff;font-size:10px;letter-spacing:.16em;font-weight:800}
+.welcome h1{font-size:30px;letter-spacing:-.04em;margin:7px 0 4px;color:#f4f6ff}
+.welcome p{margin:0;color:#9aabc5;font-size:13px}
+.welcome-tag,.period-chip,.visual-head>span{border:1px solid #2b3d59;background:#111e31;border-radius:9px;padding:9px 12px;color:#b8c5dc;font-size:10px;letter-spacing:.1em;font-weight:800;text-align:center}
+.welcome-tag small{color:#8294b2;font-size:8px}
+.section-head{align-items:center;margin:10px 0 12px}
+.metrics{grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.metric,.card,.visual-card{background:linear-gradient(155deg,#121e31,#0f192a);border:1px solid #293850;box-shadow:0 10px 28px #0003;color:#edf2ff;border-radius:14px}
+.metric{min-height:116px;padding:16px}
+.metric strong{font-size:25px;color:#f7f8ff}
+.metric-label{color:#a9b8d0}.metric-icon{background:#29264f;color:#aaa1ff}
+.visual-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr);gap:14px;margin-top:15px}
+.visual-card{padding:17px;min-width:0}
+.visual-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.visual-head h3{margin:0;font-size:14px;color:#f0f4ff}
+.visual-head p{margin:4px 0 0;font-size:11px;color:#8496b2}
+.visual-head>span{font-size:9px;padding:6px 8px}
+.bars{height:180px;display:flex;align-items:stretch;gap:clamp(7px,2vw,18px);padding:18px 8px 0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 43px,#26354c 44px,#26354c 45px)}
+.bar-day{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px;z-index:1}
+.bar-pair{height:calc(100% - 18px);width:100%;display:flex;align-items:flex-end;justify-content:center;gap:4px}
+.bar{width:min(20px,42%);min-height:2px;border-radius:5px 5px 0 0;background:linear-gradient(180deg,#a197ff,#6456df)}
+.bar.uberbar{background:linear-gradient(180deg,#50dfc5,#168c9e)}
+.bar-day small{font-size:9px;color:#8b9db9}
+.chart-empty{margin:auto;align-self:center;text-align:center;color:#8496b2;font-size:12px}
+.platform-viz{min-height:180px;display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap}
+.donut{width:138px;height:138px;border-radius:50%;background:conic-gradient(#8174ff 0 33%,#38cdb2 33% 66%,#e9b85d 66% 100%);display:grid;place-items:center;position:relative}
+.donut:before{content:"";position:absolute;inset:17px;border-radius:50%;background:#111a2b}
+.donut>div{position:relative;text-align:center}.donut b{display:block;color:#f5f7ff;font-size:20px}.donut small{color:#8798b4;font-size:8px;letter-spacing:.12em}
+.legend{display:grid;gap:11px;min-width:108px}.legend>div{display:grid;grid-template-columns:9px 1fr auto;gap:7px;align-items:center;color:#aab8ce;font-size:10px}.legend b{color:#f0f4ff;font-size:10px}.legend i{width:8px;height:8px;border-radius:50%}.legend i.lyft{background:#8174ff}.legend i.uber{background:#38cdb2}.legend i.other{background:#e9b85d}
+.card{padding:18px}.step{background:#29264f;color:#aaa1ff}
+input,select{background:#0b1423;color:#f0f4ff;border-color:#34445d}
+button{background:linear-gradient(135deg,#7568f5,#4f46cf)}
+.note{background:#18253a;border-color:#2b3d59;color:#b6c5dc}
+.submetric{background:#0c1728;border-color:#293a55}.submetric strong{color:#f5f7ff}
+th{color:#8ea1bf}td{color:#d0d9e9;border-bottom-color:#25344b}
+@media(max-width:900px){.wrap{padding:15px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.visual-grid{grid-template-columns:1fr}.main-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.wrap{padding:10px}.topbar{padding:9px 11px}.welcome{padding:18px 3px 14px}.welcome h1{font-size:24px}.welcome-tag{display:none}.metrics{gap:8px}.metric{padding:12px;min-height:100px}.metric strong{font-size:21px}.visual-card{padding:14px}.bars{height:150px}.platform-viz{min-height:155px;gap:16px}.donut{width:120px;height:120px}.card{padding:15px}.period-chip{font-size:8px}}
+
+/* Version 7 — simplified driver-first display */
+.welcome{padding:18px 2px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.welcome h1{font-size:clamp(24px,3vw,31px);margin:6px 0}
+.welcome p{font-size:13px}
+.visual-grid{display:none!important}
+.section-head{margin:12px 0 10px}
+.section-head h2{font-size:17px}
+.section-head p{font-size:11px}
+.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.metric{min-height:91px;padding:12px 14px;border-radius:13px}
+.metric strong{font-size:22px;margin-top:7px}
+.metric small{font-size:10px}
+.metric-label{font-size:11px}
+.metric-icon{width:23px;height:23px}
+.main-grid{grid-template-columns:1fr;gap:12px;margin-top:12px}
+.card{padding:16px;border-radius:14px}
+.card-title{margin-bottom:13px}
+.card-title h2{font-size:16px}
+.card-title p{font-size:11px}
+.fields{gap:11px 10px}
+label{font-size:11px}
+input,select{min-height:44px;font-size:14px}
+#add{margin-top:13px}
+#performance .submetric{display:inline-block;width:calc(50% - 7px);vertical-align:top}
+.toolbar{margin-top:12px}
+#offerAdvisor{margin-top:12px!important}
+#dailyStrategy summary{cursor:pointer;list-style:none;font-weight:750;font-size:15px;color:#f1f5ff;display:flex;justify-content:space-between;align-items:center;gap:12px}
+#dailyStrategy summary::-webkit-details-marker{display:none}
+#dailyStrategy summary:after{content:"＋";color:#aaa1ff;font-size:20px}
+#dailyStrategy[open] summary:after{content:"−"}
+#dailyStrategy summary span{font-size:10px;color:#91a3bf;font-weight:500}
+#dailyStrategy[open] summary{margin-bottom:17px}
+.history{margin-top:12px}
+.foot{font-size:10px}
+@media(max-width:520px){
+ .wrap{padding:9px 10px 24px}
+ .topbar{position:static;margin-bottom:8px}
+ .welcome{padding:10px 2px 11px}
+ .welcome h1{font-size:24px}
+ .welcome-tag{display:none}
+ .metrics{gap:8px}
+ .metric{min-height:86px;padding:11px}
+ .metric strong{font-size:21px}
+ .card{padding:14px}
+ .fields{gap:10px 8px}
+ #performance .submetric{width:100%;display:block}
+ #offerAdvisor .fields{grid-template-columns:1fr 1fr}
+}
+
+
+/* Version 8.1: clickable category navigation, preserving the Version 7 visual system */
+.category-nav{display:flex;gap:8px;overflow-x:auto;padding:9px;margin:0 0 15px;background:#0e1728;border:1px solid #293850;border-radius:15px;position:sticky;top:65px;z-index:4;scrollbar-width:thin}
+.category-nav a{flex:0 0 auto;text-decoration:none;color:#c7d2e8;background:#192840;border:1px solid #30435f;border-radius:10px;padding:10px 12px;font-size:12px;font-weight:750;white-space:nowrap}
+.category-nav a:focus,.category-nav a:hover{background:#302b60;border-color:#7568f5;color:#fff}
+.category-nav a.active{background:linear-gradient(135deg,#7568f5,#4f46cf);color:#fff;border-color:#7568f5}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.settings-grid button{width:100%;min-height:46px}.settings-status{margin-top:12px;min-height:22px;color:#b9c8df;font-size:12px}.settings-card{margin-top:16px;scroll-margin-top:135px}
+section[id],details[id]{scroll-margin-top:135px}
+@media(max-width:600px){.category-nav{top:57px;gap:6px;padding:7px}.category-nav a{padding:9px 10px;font-size:11px}.settings-grid{grid-template-columns:1fr}}
+
+</style></head><body><main class="wrap">
+<header class="topbar"><div class="brand"><span class="logo">D</span><span>DRIVERSMART <span style="color:#9d91ff">AI</span></span></div><span class="status"><span class="dot"></span> DRIVER ANALYTICS · VERSION 8.1</span></header>
+<nav class="category-nav" aria-label="DriverSmart categories">
+<a href="#dashboard" class="active">⌂ Overview</a><a href="#rideForm">＋ Log a Ride</a><a href="#performance">▥ Performance</a><a href="#offerAdvisor">✦ Ride Advisor</a><a href="#dailyStrategy">◷ Daily Strategy</a><a href="#history">▤ Ride History</a><a href="#settings">⚙ Settings</a>
+</nav>
+<section class="welcome" id="dashboard"><div><div class="eyebrow">DRIVERSMART AI</div><h1>Your driver dashboard</h1><p>Track rides, see your take-home estimate, and check offers.</p></div><div class="welcome-tag">LYFT + UBER<br><small>DRIVER TOOLS</small></div></section>
+<div class="section-head"><div><h2>Performance overview</h2><p>Your totals for the selected reporting period</p></div><span class="period-chip">YOUR RECORDED DATA</span></div>
+<section class="metrics">
+<div class="metric"><div class="metric-label"><span class="metric-icon">$</span> Driver pay</div><strong id="totalPay">$0.00</strong><small>Total recorded fares</small></div>
+<div class="metric"><div class="metric-label"><span class="metric-icon">↘</span> Estimated costs</div><strong id="totalCost">$0.00</strong><small>Fuel + vehicle reserve</small></div>
+<div class="metric"><div class="metric-label"><span class="metric-icon">✓</span> Estimated net</div><strong id="totalNet">$0.00</strong><small>After entered costs</small></div>
+<div class="metric"><div class="metric-label"><span class="metric-icon">◷</span> Net per online hour</div><strong id="netHour">—</strong><small>Based on hours you enter</small></div>
+</section>
+<section class="visual-grid" aria-label="Earnings analytics">
+<div class="visual-card"><div class="visual-head"><div><h3>Earnings activity</h3><p>Daily driver pay · Last 7 days</p></div><span>WEEKLY</span></div><div class="bars" id="earningsBars"><div class="chart-empty">Log rides to see your earnings chart.</div></div></div>
+<div class="visual-card"><div class="visual-head"><div><h3>Platform breakdown</h3><p>Driver pay by platform · Selected period</p></div><span>MIX</span></div><div class="platform-viz"><div class="donut" id="platformDonut"><div><b id="platformTotal">$0</b><small>TOTAL PAY</small></div></div><div class="legend" id="platformLegend"><div><i class="lyft"></i> Lyft <b>$0.00</b></div><div><i class="uber"></i> Uber <b>$0.00</b></div><div><i class="other"></i> Other <b>$0.00</b></div></div></div></div>
+</section>
+<div class="main-grid">
+<section class="card" id="rideForm"><div class="card-title"><span class="step">01</span><div><h2>Log a completed ride</h2><p>Add the details from your driver app; maintenance is automatic</p></div></div>
+<div class="fields">
+<div class="field"><label for="date">RIDE DATE</label><input id="date" type="date"></div><div class="field"><label for="platform">PLATFORM</label><select id="platform"><option>Lyft</option><option>Uber</option><option>Other</option></select></div>
+<div class="field"><label for="pay">DRIVER PAY ($)</label><input id="pay" type="number" min="0" step="0.01" placeholder="18.00"></div><div class="field"><label for="miles">TOTAL MILES</label><input id="miles" type="number" min="0" step="0.1" placeholder="15.0"></div>
+<div class="field"><label for="minutes">TOTAL MINUTES</label><input id="minutes" type="number" min="0" step="1" placeholder="35"></div><div class="field"><label for="fuel">FUEL COST ($)</label><input id="fuel" type="number" min="0" step="0.01" placeholder="2.70"></div>
+<div class="field"><label for="reserveRate">MAINTENANCE RATE ($ / MILE)</label><input id="reserveRate" type="number" min="0" step="0.01" value="0.20"></div>
+<div class="field"><label for="reservePreview">AUTO-CALCULATED RESERVE ($)</label><input id="reservePreview" type="text" value="$0.00" readonly aria-live="polite"></div></div>
+<button id="add">＋ &nbsp; Save completed ride</button><p class="hint">Include pickup miles and pickup time. Reserve = total miles × your saved rate per mile. Enter your driver pay, not the passenger's total charge.</p>
+<div class="note">Privacy: ride entries stay on this device in this browser. No cloud sync or direct Lyft/Uber account connection. Do not enter passenger personal information.</div></section>
+<section class="card" id="performance"><div class="card-title"><span class="step">02</span><div><h2>Driving performance</h2><p>Review your selected period</p></div></div>
+<div class="performance-fields"><div class="field"><label for="period">REPORTING PERIOD</label><select id="period"><option value="all">All rides</option><option value="today">Today</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="month">This month</option></select></div><div class="field"><label for="onlineHours">ONLINE HOURS</label><input id="onlineHours" type="number" min="0" step="0.1" placeholder="e.g. 32"></div></div>
+<div class="note" id="periodNote">Summary includes all rides recorded in this browser. Enter online hours to calculate net per online hour.</div>
+<div class="submetric"><small>AVERAGE DRIVER PAY PER MILE</small><strong id="perMile">—</strong></div><div class="submetric"><small>TOTAL RECORDED RIDE TIME</small><strong id="rideHours">0.0 hrs</strong></div>
+<div class="toolbar"><button class="secondary" id="export">↓ &nbsp; Export CSV</button><button class="secondary" id="print">▤ &nbsp; Print summary</button></div></section></div>
+<section class="card" style="margin-top:16px" id="offerAdvisor">
+<div class="card-title"><span class="step">04</span><div><h2>Ride offer advisor</h2><p>Check the numbers before accepting an offer</p></div></div>
+<div class="fields">
+<div class="field"><label for="offerPay">OFFERED DRIVER PAY ($)</label><input id="offerPay" type="number" min="0" step="0.01" placeholder="e.g. 18.00"></div>
+<div class="field"><label for="offerMiles">TOTAL MILES INCLUDING PICKUP</label><input id="offerMiles" type="number" min="0" step="0.1" placeholder="e.g. 15"></div>
+<div class="field"><label for="offerMinutes">TOTAL MINUTES INCLUDING PICKUP</label><input id="offerMinutes" type="number" min="0" step="1" placeholder="e.g. 35"></div>
+<div class="field"><label for="fuelPerMile">ESTIMATED FUEL COST ($ / MILE)</label><input id="fuelPerMile" type="number" min="0" step="0.01" value="0.14"></div>
+<div class="field"><label for="targetHour">MINIMUM GROSS PER HOUR ($)</label><input id="targetHour" type="number" min="0" step="0.50" value="24"></div>
+<div class="field"><label for="targetMile">MINIMUM GROSS PER MILE ($)</label><input id="targetMile" type="number" min="0" step="0.05" value="1.25"></div>
+</div>
+<button id="analyzeOffer" style="width:100%;margin-top:15px">Analyze this ride offer</button>
+<div id="offerResults" class="note" aria-live="polite">Enter the offer details and tap Analyze to see whether it meets your targets.</div>
+<p class="hint">This is a transparent estimate, not a prediction of Lyft or Uber demand. Use total time and miles from your actual pickup-to-dropoff estimate. You make the final decision.</p>
+</section>
+<details class="card simple-details" style="margin-top:16px" id="dailyStrategy"><summary>Daily goals &amp; other expenses <span>Tap to open</span></summary>
+<div class="card-title"><span class="step">05</span><div><h2>Daily driving strategy</h2><p>Track your daily goal and weekly results</p></div></div>
+<div class="fields">
+<div class="field"><label for="dailyGoal">DAILY NET EARNINGS GOAL ($)</label><input id="dailyGoal" type="number" min="0" step="1" value="200"></div>
+<div class="field"><label for="expenseDate">EXPENSE DATE</label><input id="expenseDate" type="date"></div>
+<div class="field"><label for="extraExpense">OTHER BUSINESS EXPENSES ($)</label><input id="extraExpense" type="number" min="0" step="0.01" placeholder="e.g. parking, car wash"></div>
+<div class="field"><label for="expenseNote">EXPENSE NOTE</label><input id="expenseNote" type="text" maxlength="60" placeholder="e.g. car wash"></div>
+</div>
+<button id="saveExpense" style="width:100%;margin-top:14px">Save daily expense</button>
+<div class="note" id="expenseStatus" aria-live="polite">Additional expenses are saved by date on this device. They are included in the daily and weekly net estimates below.</div>
+<div class="submetric"><small>TODAY'S ESTIMATED NET AFTER ALL ENTERED COSTS</small><strong id="todayNet">$0.00</strong><small id="goalCaption">Daily goal: $200.00</small>
+<div style="height:11px;background:#e8edf5;border-radius:20px;overflow:hidden;margin-top:12px"><div id="goalBar" style="height:100%;width:0%;background:linear-gradient(90deg,#2868d7,#42a47b);border-radius:20px;transition:width .2s"></div></div>
+<small id="goalProgress" style="display:block;margin-top:7px">0% of daily goal</small></div>
+<div class="performance-fields" style="margin-top:12px">
+<div class="submetric"><small>LYFT DRIVER PAY · LAST 7 DAYS</small><strong id="weekLyft">$0.00</strong></div>
+<div class="submetric"><small>UBER DRIVER PAY · LAST 7 DAYS</small><strong id="weekUber">$0.00</strong></div>
+<div class="submetric"><small>WEEKLY ESTIMATED NET</small><strong id="weekNet">$0.00</strong></div>
+<div class="submetric"><small>WEEKLY OTHER EXPENSES</small><strong id="weekExtra">$0.00</strong></div>
+</div>
+<p class="hint">Weekly report covers today and the previous six calendar days. Estimated net subtracts recorded fuel, maintenance reserve and additional expenses entered above. It does not include expenses you have not entered.</p>
+</details>
+<section class="card history" id="history"><div class="history-head"><div class="card-title"><span class="step">03</span><div><h2>Ride history</h2><p>Your saved completed rides</p></div></div></div><div class="tablewrap"><table><thead><tr><th>Date</th><th>Platform</th><th>Pay</th><th>Miles</th><th>Minutes</th><th>Entered costs</th><th>Est. net</th><th></th></tr></thead><tbody id="rows"><tr><td colspan="8" class="empty">No rides recorded yet. Add your first completed ride above.</td></tr></tbody></table></div></section>
+<section class="card settings-card" id="settings">
+<div class="card-title"><span class="step">07</span><div><h2>Settings &amp; data protection</h2><p>Back up your records, restore them, or export a spreadsheet</p></div></div>
+<div class="note">Your ride records are stored in this browser on this device using IndexedDB, with a local-storage compatibility copy. Back up regularly before clearing browser data, changing phones, or uninstalling a browser.</div>
+<div class="settings-grid" style="margin-top:14px"><button id="backupJson">↓ Download full backup</button><button id="restoreJson" class="secondary">↑ Restore backup</button><button id="exportAllCsv" class="secondary">▤ Export all rides to CSV</button></div>
+<input id="restoreFile" type="file" accept=".json,application/json" hidden>
+<div id="backupStatus" class="settings-status" role="status" aria-live="polite">Backup includes ride records, expenses, and saved preferences.</div>
+<p class="hint">Lyft and Uber are tracked through manual entry from your driver apps. This app does not sign in to either service, read their private APIs, or automatically import trips.</p>
+</section>
+<p class="foot">ESTIMATES ONLY · “Estimated net” subtracts fuel and the automatically calculated vehicle reserve. It is not tax advice or full business profit. It excludes insurance, taxes, platform adjustments, unpaid repositioning, financing and other costs unless you account for them separately. Online hours are entered manually. Use this tool only when safely parked.</p>
+</main><script>
+const $=id=>document.getElementById(id);const KEY='driversmart_v3_rides';let rides=[];try{rides=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(rides))rides=[]}catch(e){rides=[]}
+const RATE_KEY='driversmart_v3_reserve_rate';const PREF_KEY='driversmart_v4_offer_prefs';const GOAL_KEY='driversmart_v5_daily_goal';const EXP_KEY='driversmart_v5_daily_expenses';const savedRate=localStorage.getItem(RATE_KEY);if(savedRate!==null&&Number.isFinite(Number(savedRate))&&Number(savedRate)>=0)$('reserveRate').value=savedRate;
+try{const pref=JSON.parse(localStorage.getItem(PREF_KEY)||'{}');if(pref.targetHour!==undefined)$('targetHour').value=pref.targetHour;if(pref.targetMile!==undefined)$('targetMile').value=pref.targetMile;if(pref.fuelPerMile!==undefined)$('fuelPerMile').value=pref.fuelPerMile}catch(e){}
+let dailyExpenses={};try{dailyExpenses=JSON.parse(localStorage.getItem(EXP_KEY)||'{}');if(!dailyExpenses||typeof dailyExpenses!=='object')dailyExpenses={}}catch(e){dailyExpenses={}}
+try{const g=localStorage.getItem(GOAL_KEY);if(g!==null&&Number(g)>=0)$('dailyGoal').value=g}catch(e){}
+const today=new Date();const todayKey=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');$('expenseDate').value=todayKey;$('date').value=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+const num=id=>Math.max(0,Number($(id).value)||0),usd=x=>x.toLocaleString('en-US',{style:'currency',currency:'USD'});function save(){try{localStorage.setItem(KEY,JSON.stringify(rides));persistSnapshot()}catch(e){alert('Browser storage is unavailable or full. Download a backup before continuing.')}}
+const DB_NAME='DriverSmartAI81',DB_STORE='appdata';let dbPromise=null;
+function openDB(){if(!('indexedDB' in window))return Promise.resolve(null);if(dbPromise)return dbPromise;dbPromise=new Promise(resolve=>{try{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(DB_STORE))req.result.createObjectStore(DB_STORE)};req.onsuccess=()=>resolve(req.result);req.onerror=()=>resolve(null)}catch(e){resolve(null)}});return dbPromise}
+function snapshot(){return {version:'8.1',savedAt:new Date().toISOString(),rides,dailyExpenses,settings:{reserveRate:num('reserveRate'),targetHour:num('targetHour'),targetMile:num('targetMile'),fuelPerMile:num('fuelPerMile'),dailyGoal:num('dailyGoal')}}}
+async function persistSnapshot(){const db=await openDB();if(!db)return;try{await new Promise(resolve=>{const tx=db.transaction(DB_STORE,'readwrite');tx.objectStore(DB_STORE).put(snapshot(),'main');tx.oncomplete=resolve;tx.onerror=resolve})}catch(e){}}
+async function hydrateFromDB(){const db=await openDB();if(!db)return;try{const data=await new Promise(resolve=>{const req=db.transaction(DB_STORE,'readonly').objectStore(DB_STORE).get('main');req.onsuccess=()=>resolve(req.result);req.onerror=()=>resolve(null)});if(data&&Array.isArray(data.rides)){rides=data.rides;dailyExpenses=data.dailyExpenses||{};localStorage.setItem(KEY,JSON.stringify(rides));localStorage.setItem(EXP_KEY,JSON.stringify(dailyExpenses));if(data.settings){for(const [id,key] of [['reserveRate','reserveRate'],['targetHour','targetHour'],['targetMile','targetMile'],['fuelPerMile','fuelPerMile'],['dailyGoal','dailyGoal']])if(data.settings[key]!==undefined)$(id).value=data.settings[key];}render();updateDashboardCharts();updateStrategy();}else{persistSnapshot()}}catch(e){}}
+function filtered(){const p=$('period').value,now=new Date();return rides.filter(r=>{const d=new Date(r.date+'T12:00:00');if(p==='all')return true;if(p==='today'){const t=new Date();const key=[t.getFullYear(),String(t.getMonth()+1).padStart(2,'0'),String(t.getDate()).padStart(2,'0')].join('-');return r.date===key;}if(p==='7'){const x=new Date(now);x.setDate(x.getDate()-6);x.setHours(0,0,0,0);return d>=x&&d<=now}if(p==='30'){const x=new Date(now);x.setDate(x.getDate()-29);x.setHours(0,0,0,0);return d>=x&&d<=now}return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()})}
+function filteredExpenseTotal(){const p=$('period').value,now=new Date(),today=dateKey(now);return Object.entries(dailyExpenses).reduce((sum,[key,x])=>{let keep=p==='all';if(p==='today')keep=key===today;if(p==='7'||p==='30'){const start=new Date(now);start.setDate(start.getDate()-(p==='7'?6:29));const min=dateKey(start);keep=key>=min&&key<=today}if(p==='month')keep=key.slice(0,7)===today.slice(0,7);return sum+(keep?(Number(x.amount)||0):0)},0)}
+function dateKey(d){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
+function ridesForDay(key){return rides.filter(r=>r.date===key)}
+function extraForDay(key){return Number(dailyExpenses[key]?.amount)||0}
+
+function updateDashboardCharts(){
+ const today=new Date(),daily=[];
+ for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);const key=dateKey(d);const day=rides.filter(r=>r.date===key);daily.push({label:d.toLocaleDateString('en-US',{weekday:'short'}),lyft:day.filter(r=>r.platform==='Lyft').reduce((a,r)=>a+r.pay,0),uber:day.filter(r=>r.platform==='Uber').reduce((a,r)=>a+r.pay,0)});}
+ const peak=Math.max(1,...daily.map(d=>d.lyft+d.uber));
+ $('earningsBars').innerHTML=daily.some(d=>d.lyft+d.uber>0)?daily.map(d=>`<div class="bar-day"><div class="bar-pair"><div class="bar" title="Lyft ${usd(d.lyft)}" style="height:${Math.max(2,d.lyft/peak*100)}%"></div><div class="bar uberbar" title="Uber ${usd(d.uber)}" style="height:${Math.max(2,d.uber/peak*100)}%"></div></div><small>${d.label}</small></div>`).join(''):'<div class="chart-empty">Log rides to see your earnings chart.</div>';
+ const list=filtered(),names=['Lyft','Uber','Other'],values=names.map(n=>list.filter(r=>r.platform===n).reduce((a,r)=>a+r.pay,0)),total=values.reduce((a,b)=>a+b,0);
+ const p=total?values.map(v=>v/total*100):[0,0,0];let cursor=0;const palette=['#8174ff','#38cdb2','#e9b85d'];const stops=values.map((v,i)=>{const a=cursor;cursor+=p[i];return `${palette[i]} ${a}% ${cursor}%`});
+ $('platformDonut').style.background=total?`conic-gradient(${stops.join(',')})`:'conic-gradient(#34445d 0 100%)';
+ $('platformTotal').textContent=usd(total);$('platformLegend').innerHTML=names.map((n,i)=>`<div><i class="${n.toLowerCase()}"></i> ${n} <b>${usd(values[i])}</b></div>`).join('');
+}
+
+function updateStrategy(){
+ const todayRides=ridesForDay(todayKey),todayPay=todayRides.reduce((a,r)=>a+r.pay,0),todayRideCosts=todayRides.reduce((a,r)=>a+r.fuel+r.reserve,0),todayExtra=extraForDay(todayKey),todayNetValue=todayPay-todayRideCosts-todayExtra,goal=num('dailyGoal'),pct=goal>0?Math.max(0,todayNetValue/goal*100):0;
+ $('todayNet').textContent=usd(todayNetValue);$('goalCaption').textContent='Daily goal: '+usd(goal)+' · Other expenses: '+usd(todayExtra);$('goalBar').style.width=Math.min(100,pct)+'%';$('goalProgress').textContent=goal>0?Math.round(pct)+'% of daily goal'+(todayNetValue>=goal?' · Goal reached':' · '+usd(Math.max(0,goal-todayNetValue))+' remaining'):'Set a daily goal to track progress';
+ const start=new Date();start.setDate(start.getDate()-6);start.setHours(0,0,0,0);const week=rides.filter(r=>{const d=new Date(r.date+'T12:00:00');return d>=start&&d<=new Date()});const lyft=week.filter(r=>r.platform==='Lyft').reduce((a,r)=>a+r.pay,0),uber=week.filter(r=>r.platform==='Uber').reduce((a,r)=>a+r.pay,0),rideNet=week.reduce((a,r)=>a+r.pay-r.fuel-r.reserve,0);
+ let other=0;for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);other+=extraForDay(dateKey(d))}
+ $('weekLyft').textContent=usd(lyft);$('weekUber').textContent=usd(uber);$('weekNet').textContent=usd(rideNet-other);$('weekExtra').textContent=usd(other);
+}
+function updateReserve(){const amount=num('miles')*num('reserveRate');$('reservePreview').value=usd(amount);return amount;}function render(){const list=filtered(),pay=list.reduce((s,r)=>s+r.pay,0),rideCost=list.reduce((s,r)=>s+r.fuel+r.reserve,0),otherCost=filteredExpenseTotal(),cost=rideCost+otherCost,net=pay-cost,miles=list.reduce((s,r)=>s+r.miles,0),mins=list.reduce((s,r)=>s+r.minutes,0),hours=num('onlineHours');$('totalPay').textContent=usd(pay);$('totalCost').textContent=usd(cost);$('totalNet').textContent=usd(net);$('netHour').textContent=hours>0?usd(net/hours):'—';$('perMile').textContent=miles>0?usd(pay/miles):'—';$('rideHours').textContent=(mins/60).toFixed(1)+' hrs';$('periodNote').textContent=list.length+' ride(s) in selected period. Net per online hour uses the online hours you enter, not just time spent on recorded rides.';
+$('rows').innerHTML=list.length?list.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id).map(r=>`<tr><td>${r.date}</td><td>${r.platform}</td><td>${usd(r.pay)}</td><td>${r.miles.toFixed(1)}</td><td>${r.minutes}</td><td>${usd(r.fuel+r.reserve)}</td><td>${usd(r.pay-r.fuel-r.reserve)}</td><td><button class="danger" data-del="${r.id}" aria-label="Delete ride">Delete</button></td></tr>`).join(''):'<tr><td colspan="8" class="empty">No rides recorded for this period.</td></tr>';
+}
+$('add').addEventListener('click',()=>{const date=$('date').value,pay=num('pay'),miles=num('miles'),minutes=num('minutes');if(!date||pay<=0||miles<=0||minutes<=0){alert('Please enter a date, positive driver pay, total miles, and total minutes.');return;}rides.push({id:Date.now()+Math.random(),date,platform:$('platform').value,pay,miles,minutes,fuel:num('fuel'),reserve:updateReserve()});save();['pay','miles','minutes','fuel'].forEach(id=>$(id).value='');render();updateDashboardCharts();updateStrategy();});
+$('rows').addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(!b)return;rides=rides.filter(r=>String(r.id)!==b.dataset.del);save();render();updateDashboardCharts();updateStrategy()});$('period').addEventListener('change',()=>{render();updateDashboardCharts()});$('onlineHours').addEventListener('input',render);$('miles').addEventListener('input',updateReserve);$('reserveRate').addEventListener('input',()=>{localStorage.setItem(RATE_KEY,String(num('reserveRate')));updateReserve()});updateReserve();
+function analyzeOffer(){
+ const pay=num('offerPay'),miles=num('offerMiles'),minutes=num('offerMinutes');
+ const fuelRate=num('fuelPerMile'),reserveRate=num('reserveRate');
+ const hourTarget=num('targetHour'),mileTarget=num('targetMile');
+ const out=$('offerResults');
+ if(pay<=0||miles<=0||minutes<=0){out.textContent='Please enter a positive offer amount, total miles and total minutes.';return;}
+ const grossHour=pay/(minutes/60),grossMile=pay/miles;
+ const fuel=miles*fuelRate,reserve=miles*reserveRate,net=pay-fuel-reserve;
+ const minFare=Math.max(hourTarget*(minutes/60),mileTarget*miles);
+ const hourOK=grossHour>=hourTarget,mileOK=grossMile>=mileTarget,pass=hourOK&&mileOK;
+ const status=pass?'MEETS BOTH TARGETS':'BELOW AT LEAST ONE TARGET';
+ const color=pass?'#16845b':'#b54747';
+ out.innerHTML=`<div style="font-weight:800;color:${color};font-size:15px;margin-bottom:8px">${status}</div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+ <div><small>GROSS PER HOUR</small><strong>${usd(grossHour)}</strong><small>Target: ${usd(hourTarget)} · ${hourOK?'Met':'Not met'}</small></div>
+ <div><small>GROSS PER MILE</small><strong>${usd(grossMile)}</strong><small>Target: ${usd(mileTarget)} · ${mileOK?'Met':'Not met'}</small></div>
+ <div><small>ESTIMATED NET</small><strong>${usd(net)}</strong><small>After estimated fuel + maintenance</small></div>
+ <div><small>MINIMUM FARE TO MEET BOTH</small><strong>${usd(minFare)}</strong><small>At these miles and minutes</small></div></div>
+ <p style="margin:10px 0 0">Estimated costs: fuel ${usd(fuel)} + maintenance ${usd(reserve)}. Excludes taxes and other business expenses.</p>`;
+}
+$('analyzeOffer').addEventListener('click',analyzeOffer);
+['targetHour','targetMile','fuelPerMile'].forEach(id=>$(id).addEventListener('change',()=>{
+ try{localStorage.setItem(PREF_KEY,JSON.stringify({targetHour:num('targetHour'),targetMile:num('targetMile'),fuelPerMile:num('fuelPerMile')}));}catch(e){}
+}));
+$('export').addEventListener('click',()=>{const header=['Record type','Date','Platform or note','Driver pay or expense','Total miles','Total minutes','Fuel cost','Vehicle reserve','Estimated net'];const lines=[header,...filtered().map(r=>['Ride',r.date,r.platform,r.pay,r.miles,r.minutes,r.fuel,r.reserve,r.pay-r.fuel-r.reserve]),...Object.entries(dailyExpenses).map(([date,x])=>['Other expense',date,(x.notes||[]).join('; '),-(Number(x.amount)||0),'','','','',''])];const csv=lines.map(row=>row.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\r\n');const blob=new Blob([csv],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='driversmart-ride-history.csv';a.click();URL.revokeObjectURL(url)});$('print').addEventListener('click',()=>window.print());render();updateStrategy();updateDashboardCharts();
+$('dailyGoal').addEventListener('input',()=>{try{localStorage.setItem(GOAL_KEY,String(num('dailyGoal')))}catch(e){}updateStrategy()});
+$('saveExpense').addEventListener('click',()=>{const date=$('expenseDate').value,amount=num('extraExpense'),note=$('expenseNote').value.trim();if(!date||amount<=0){$('expenseStatus').textContent='Enter an expense date and an amount greater than zero.';return;}const old=dailyExpenses[date]||{amount:0,notes:[]};old.amount+=amount;if(note)old.notes.push(note+' ('+usd(amount)+')');dailyExpenses[date]=old;try{localStorage.setItem(EXP_KEY,JSON.stringify(dailyExpenses));$('expenseStatus').textContent='Saved '+usd(amount)+' for '+date+'. Total other expenses for that date: '+usd(old.amount)+'.';$('extraExpense').value='';$('expenseNote').value='';updateStrategy()}catch(e){$('expenseStatus').textContent='Could not save this expense. Export your ride history and check browser storage.';}});
+
+// Version 8.1 persistence, backup/restore, and category navigation
+function persistAll(){try{localStorage.setItem(KEY,JSON.stringify(rides));localStorage.setItem(EXP_KEY,JSON.stringify(dailyExpenses));localStorage.setItem(RATE_KEY,String(num('reserveRate')));localStorage.setItem(PREF_KEY,JSON.stringify({targetHour:num('targetHour'),targetMile:num('targetMile'),fuelPerMile:num('fuelPerMile')}));localStorage.setItem(GOAL_KEY,String(num('dailyGoal')))}catch(e){}persistSnapshot()}
+function downloadBlob(blob,name){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1200)}
+$('backupJson').addEventListener('click',()=>{persistAll();const data=snapshot();downloadBlob(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),'driversmart-ai-backup-'+todayKey+'.json');$('backupStatus').textContent='Full backup downloaded. Keep a copy somewhere safe.'});
+$('restoreJson').addEventListener('click',()=>$('restoreFile').click());
+$('restoreFile').addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!data||!Array.isArray(data.rides))throw new Error('This file is not a DriverSmart backup.');if(!confirm('Restore this backup? Current records on this device will be replaced.'))return;rides=data.rides.filter(r=>r&&r.date&&['Lyft','Uber','Other'].includes(r.platform)).map(r=>({...r,pay:Number(r.pay)||0,miles:Number(r.miles)||0,minutes:Number(r.minutes)||0,fuel:Number(r.fuel)||0,reserve:Number(r.reserve)||0}));dailyExpenses=data.dailyExpenses&&typeof data.dailyExpenses==='object'?data.dailyExpenses:{};if(data.settings){for(const id of ['reserveRate','targetHour','targetMile','fuelPerMile','dailyGoal'])if(data.settings[id]!==undefined&&$(id))$(id).value=data.settings[id]}persistAll();render();updateDashboardCharts();updateStrategy();$('backupStatus').textContent='Backup restored successfully: '+rides.length+' ride(s).';}catch(err){$('backupStatus').textContent='Restore failed: '+err.message;}finally{e.target.value=''}});
+$('exportAllCsv').addEventListener('click',()=>{const header=['Record type','Date','Platform or note','Driver pay or expense','Total miles','Total minutes','Fuel cost','Vehicle reserve','Other expenses','Estimated net'];const lines=[header,...rides.map(r=>['Ride',r.date,r.platform,r.pay,r.miles,r.minutes,r.fuel,r.reserve,0,r.pay-r.fuel-r.reserve]),...Object.entries(dailyExpenses).map(([date,x])=>['Other expense',date,(x.notes||[]).join('; '),0,0,0,0,0,Number(x.amount)||0,-(Number(x.amount)||0)])];const csv=lines.map(row=>row.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\r\n');downloadBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),'driversmart-all-rides.csv');$('backupStatus').textContent='CSV export created with all recorded rides and dated other expenses.'});
+// Also persist daily expenses/settings to IndexedDB whenever the page is saved or values change.
+$('saveExpense').addEventListener('click',()=>setTimeout(persistAll,0));$('dailyGoal').addEventListener('change',persistAll);['reserveRate','targetHour','targetMile','fuelPerMile'].forEach(id=>$(id).addEventListener('change',persistAll));
+document.querySelectorAll('.category-nav a').forEach(a=>a.addEventListener('click',()=>{document.querySelectorAll('.category-nav a').forEach(x=>x.classList.remove('active'));a.classList.add('active')}));
+hydrateFromDB();
+
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) { window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(err=>console.warn('Offline support could not be enabled:',err))); }
+</script></body></html>
